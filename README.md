@@ -31,16 +31,17 @@ Modelo de segmentación de clientes con K-Means, evaluado con el método del cod
 ├── models/kmeans_segmentation.joblib   # Pipeline entrenado (StandardScaler + K-Means) + métricas + perfiles
 ├── outputs/mall_customers_segmented.csv# Clientes con su cluster y perfil
 ├── DOCUMENTACIÓN_TÉCNICA.txt           # Documentación técnica (plantilla diligenciada + preguntas y respuestas)
-├── requirements.txt
+├── requirements.txt                    # Dependencias de la app (las usa Streamlit Community Cloud)
+├── requirements-notebook.txt           # Dependencias adicionales para ejecutar el cuaderno
 └── .streamlit/config.toml              # Tema de la aplicación
 ```
 
 ## Cómo ejecutarlo
 
-1. Instalar las dependencias:
+1. Instalar las dependencias. Basta con `requirements.txt` para la app; para el cuaderno, usar `requirements-notebook.txt`:
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements-notebook.txt
    ```
 
 2. (Opcional) Volver a ejecutar el cuaderno para regenerar el modelo y las salidas:
@@ -61,3 +62,16 @@ Modelo de segmentación de clientes con K-Means, evaluado con el método del cod
    - **Clasificar cliente:** se ingresan el ingreso anual y el puntaje de gasto, y el modelo asigna automáticamente el cluster, el perfil y la estrategia recomendada.
 
 > El modelo se guardó con scikit-learn 1.9.1. Si se usa otra versión, conviene volver a ejecutar el cuaderno (paso 2) antes de abrir la app.
+
+## Despliegue en Streamlit Community Cloud
+
+1. Entrar a [share.streamlit.io](https://share.streamlit.io) e iniciar sesión con la cuenta de GitHub dueña de este repositorio.
+2. **Create app** → **Deploy a public app from GitHub** y completar:
+   - **Repository:** `sara9559ojeda/Mineria_Proyecto_Final`
+   - **Branch:** `main`
+   - **Main file path:** `app.py`
+   - **App URL:** un subdominio libre, por ejemplo `segmentacion-clientes-kmeans`
+3. En **Advanced settings**, elegir **Python 3.12**. Las versiones fijadas en `requirements.txt` no existen para Python 3.11.
+4. Presionar **Deploy**. Streamlit instala `requirements.txt`, aplica el tema de `.streamlit/config.toml` y publica la app en `https://<subdominio>.streamlit.app`.
+
+Cada `git push` a `main` actualiza la app desplegada automáticamente.

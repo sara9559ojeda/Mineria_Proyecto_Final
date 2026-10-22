@@ -1,0 +1,5 @@
+# Extra dependencies to run proyecto_final_kmeans.ipynb
+-r requirements.txt
+matplotlib==3.11.2
+seaborn==0.13.2
+jupyter

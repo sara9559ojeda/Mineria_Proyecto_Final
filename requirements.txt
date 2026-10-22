@@ -1,10 +1,8 @@
-# The exported model (models/kmeans_segmentation.joblib) was trained with these versions
-scikit-learn==1.9.1
-pandas==3.0.5
-numpy==2.5.3
-joblib==1.6.0
+# Dependencies of the Streamlit app (installed by Streamlit Community Cloud).
+# scikit-learn and numpy must match the versions that trained models/kmeans_segmentation.joblib
 streamlit==1.63.0
+scikit-learn==1.9.1
+numpy==2.5.3
+pandas==3.0.5
+joblib==1.6.0
 plotly==7.0.0
-matplotlib==3.11.2
-seaborn==0.13.2
-jupyter
