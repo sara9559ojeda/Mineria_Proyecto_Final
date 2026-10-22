@@ -2,7 +2,7 @@
 
 * **Proyecto:** Taller final de Minería de datos. Segmentación de clientes con K-Means (dataset *Mall Customers*).
 * **Docente:** PhD Cristian Camilo Ordoñez Quintero
-* **Integrantes:** [Nombre], [Nombre]
+* **Integrante:** Sara María Ojeda López
 * **Archivos relacionados:** `proyecto_final_kmeans.ipynb` (análisis completo), `app.py` (aplicación Streamlit), `models/kmeans_segmentation.joblib` (modelo) y `outputs/mall_customers_segmented.csv` (clientes segmentados).
 
 **Contenido**
@@ -37,13 +37,13 @@
 ## Personas involucradas
 * Personas involucradas en el proyecto:
 	* Equipo de Minería de datos:
-		* Jefe de proyecto: [Nombre] - planeación, seguimiento y comunicación con el cliente.
-		* Minero de datos: [Nombre] - exploración, modelado, evaluación y despliegue.
+		* Jefe de proyecto: Sara María Ojeda López - planeación, seguimiento y comunicación con el cliente.
+		* Minero de datos: Sara María Ojeda López - exploración, modelado, evaluación y despliegue.
 
 	* Cliente:
-		* Contacto principal: [Nombre], director(a) de marketing - valida los perfiles y las estrategias.
-		* Contacto departamento 1: [Nombre], responsable de CRM y fidelización - provee los datos y usa la lista segmentada.
-		* Administrador de sistemas: [Nombre], área de TI - despliegue y mantenimiento de la aplicación.
+		* Contacto principal: director(a) de marketing del centro comercial - valida los perfiles y las estrategias.
+		* Contacto departamento 1: responsable de CRM y fidelización - provee los datos y usa la lista segmentada.
+		* Administrador de sistemas: área de TI - despliegue y mantenimiento de la aplicación.
 
 	* Revisión académica: PhD Cristian Camilo Ordoñez Quintero (docente de Minería de datos).
 
