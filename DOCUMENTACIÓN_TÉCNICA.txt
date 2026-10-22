@@ -1,0 +1,274 @@
+# Documentación técnica · Segmentación de clientes con K-Means
+
+* **Proyecto:** Taller final de Minería de datos. Segmentación de clientes con K-Means (dataset *Mall Customers*).
+* **Docente:** PhD Cristian Camilo Ordoñez Quintero
+* **Integrantes:** [Nombre], [Nombre]
+* **Archivos relacionados:** `proyecto_final_kmeans.ipynb` (análisis completo), `app.py` (aplicación Streamlit), `models/kmeans_segmentation.joblib` (modelo) y `outputs/mall_customers_segmented.csv` (clientes segmentados).
+
+**Contenido**
+1. Información de negocio
+2. Alcance del proyecto
+3. Personas involucradas
+4. Objetivo
+5. Plan
+6. Arquitectura
+7. Comunicación
+8. Preguntas del taller y respuestas
+
+## Información de negocio
+* **Problema a solucionar:** el centro comercial tiene datos de sus clientes de tarjeta de membresía (género, edad, ingreso anual y puntaje de gasto), pero hoy dirige la misma comunicación de marketing a todos. Esto desperdicia presupuesto en clientes que no van a responder y no aprovecha a los que tienen capacidad de gastar más. Se necesita identificar grupos de clientes con comportamiento similar para diseñar estrategias diferenciadas.
+* **Cliente:** el departamento de marketing de un centro comercial (industria retail / comercio minorista). Es un equipo interno de la propia empresa. El caso se trabaja con el dataset público *Mall Customers* de Kaggle.
+
+## Alcance del proyecto
+* **Qué va a hacer el equipo de Minería de datos:**
+  * Exploración y limpieza del dataset (calidad del dato, valores atípicos, relaciones entre variables).
+  * Preprocesamiento: selección de variables y estandarización con StandardScaler.
+  * Modelado no supervisado con K-Means y selección del número de clusters con el método del codo, el coeficiente de silueta y el índice de Davies-Bouldin.
+  * Interpretación de negocio: perfiles de clientes y estrategias de marketing por segmento.
+  * Despliegue de una aplicación interactiva para clasificar clientes nuevos.
+* **Fuera del alcance:** integración en tiempo real con el CRM o los sistemas de la empresa, modelos supervisados (predicción de compra) y cálculo de valores monetarios (el *spending score* es un índice, no dinero).
+* **Cómo se entrega el resultado al cliente:**
+  * `proyecto_final_kmeans.ipynb`: cuaderno con todo el análisis y las respuestas del taller.
+  * `app.py`: aplicación Streamlit para consultar la segmentación y clasificar clientes nuevos.
+  * `outputs/mall_customers_segmented.csv`: lista de clientes con su cluster y su perfil, lista para usar en campañas.
+  * `models/kmeans_segmentation.joblib`: modelo entrenado (StandardScaler + K-Means) que usa la aplicación.
+  * Esta documentación técnica y una presentación de resultados al equipo de marketing.
+
+## Personas involucradas
+* Personas involucradas en el proyecto:
+	* Equipo de Minería de datos:
+		* Jefe de proyecto: [Nombre] - planeación, seguimiento y comunicación con el cliente.
+		* Minero de datos: [Nombre] - exploración, modelado, evaluación y despliegue.
+
+	* Cliente:
+		* Contacto principal: [Nombre], director(a) de marketing - valida los perfiles y las estrategias.
+		* Contacto departamento 1: [Nombre], responsable de CRM y fidelización - provee los datos y usa la lista segmentada.
+		* Administrador de sistemas: [Nombre], área de TI - despliegue y mantenimiento de la aplicación.
+
+	* Revisión académica: PhD Cristian Camilo Ordoñez Quintero (docente de Minería de datos).
+
+## Objetivo
+* **Objetivo principal:** segmentar a los 200 clientes del centro comercial en grupos homogéneos según su capacidad de compra (ingreso anual) y su comportamiento de gasto (*spending score*), y traducir cada grupo en un perfil con una estrategia de marketing concreta.
+* **Variables objetivo** (al ser un problema no supervisado no hay una etiqueta que predecir; la calidad se mide con métricas de clustering):
+  * Coeficiente de silueta promedio: cohesión vs. separación de los grupos.
+  * Índice de Davies-Bouldin: similitud entre clusters (menor es mejor).
+  * Inercia (WCSS): compacidad de los grupos, analizada con el método del codo.
+  * Porcentaje de clientes asignados a un perfil accionable.
+* **Mejora esperada:**
+  * Pasar de 0 segmentos (marketing masivo) a 4-5 segmentos accionables.
+  * Coeficiente de silueta ≥ 0.50 (estructura "razonable" según Kaufman & Rousseeuw).
+  * Davies-Bouldin < 1.
+  * 100 % de los clientes con un perfil asignado.
+* **Status actual de la variable objetivo:**
+  * Antes del proyecto no existía segmentación: todos los clientes recibían la misma comunicación.
+  * **Resultado obtenido:** K = 5 segmentos, silueta = 0.555, Davies-Bouldin = 0.572 e inercia = 65.6, con el 100 % de los clientes perfilados. Las metas se cumplen.
+  * Los segmentos son: alto valor (19.5 %), promedio (40.5 %), con potencial (17.5 %), compradores impulsivos (11 %) y bajo valor (11.5 %).
+* **Cómo se mide la variable objetivo:**
+  * Con `silhouette_score` y `davies_bouldin_score` de scikit-learn, calculados sobre los datos estandarizados para K = 2…10. También se revisa el diagrama de silueta por cliente (solo 2 de 200 tienen silueta negativa).
+  * Validación de negocio: el equipo de marketing revisa que los perfiles sean interpretables y accionables.
+  * Seguimiento posterior: comparar la respuesta a campañas por segmento.
+
+## Plan
+* **Fase 1 - Entendimiento del negocio:** reunión con marketing, definición del problema, de los objetivos y de las métricas de éxito (este documento).
+* **Fase 2 - Exploración de datos (Parte 1):** carga del dataset, revisión de calidad (duplicados, nulos, rangos, tipos), estadística descriptiva, detección de atípicos con IQR y Z-score, y análisis de correlaciones y gráficos de dispersión para elegir las variables.
+* **Fase 3 - Preprocesamiento (Parte 2):** selección de ingreso anual y puntaje de gasto, y estandarización con StandardScaler.
+* **Fase 4 - Modelado y evaluación (Partes 3, 4 y 5):** método del codo, coeficiente de silueta y Davies-Bouldin para K = 1…10, comparación con la edad como variable adicional, entrenamiento del modelo final con K = 5 y análisis de centroides.
+* **Fase 5 - Interpretación de negocio (Parte 6):** asignación de perfiles (alto valor, promedio, bajo valor, con potencial y compradores impulsivos) y estrategias de marketing por segmento.
+* **Fase 6 - Despliegue (Parte 7):** exportación del Pipeline con joblib y aplicación Streamlit que muestra el método del codo y los clusters y clasifica clientes nuevos.
+* **Fase 7 - Entrega y seguimiento:** presentación de resultados a marketing, entrega de la lista segmentada y plan de reentrenamiento periódico.
+
+## Arquitectura
+* **Datos**
+  * **¿Qué datos esperamos?** Un archivo `Mall_Customers.csv` con 200 clientes y 5 columnas: `CustomerID`, `Gender`, `Age`, `Annual Income (k$)` y `Spending Score (1-100)`. No contiene nombres ni datos de contacto.
+  * **¿Cómo están almacenados?** Como un archivo CSV plano en la carpeta del proyecto. En producción vendría de una exportación periódica de la base de datos del programa de membresía (CRM).
+* **Procesamiento**
+  * **¿Cómo se van a procesar los datos?** Con Python y pandas en un cuaderno Jupyter: validación de calidad, renombrado de columnas, selección de variables y estandarización. El escalador y el modelo se encapsulan en un `Pipeline` de scikit-learn para que los clientes nuevos se transformen exactamente igual que los de entrenamiento.
+  * **¿Qué tecnologías vamos a usar para entrenar los modelos?** scikit-learn (StandardScaler, KMeans, silhouette_score, davies_bouldin_score), pandas, NumPy, matplotlib y seaborn para el análisis, y joblib para serializar el modelo.
+* **Despliegue**
+  * Aplicación web local con Streamlit y Plotly (`streamlit run app.py`). Carga el modelo serializado y permite ver el método del codo, explorar los clusters y clasificar un cliente nuevo.
+  * Se puede publicar en Streamlit Community Cloud o en un servidor interno de la empresa.
+* **Diagrama de flujo**
+
+```
+ ┌──────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────┐
+ │  Mall_Customers.csv  │───▶│  proyecto_final_kmeans.ipynb │───▶│ models/                  │
+ │  (exportación CRM)   │    │  1. Exploración y limpieza   │    │ kmeans_segmentation.     │
+ └──────────────────────┘    │  2. StandardScaler           │    │ joblib (Pipeline +       │
+                             │  3-4. Codo / Silueta / DB    │    │ métricas + perfiles)     │
+                             │  5. K-Means (K = 5)          │    └────────────┬─────────────┘
+                             │  6. Perfiles de negocio      │                 │
+                             └──────────────┬───────────────┘                 ▼
+                                            │                   ┌──────────────────────────┐
+                                            ▼                   │  app.py (Streamlit)      │
+                             ┌──────────────────────────────┐   │  · Método del codo       │
+                             │ outputs/                     │   │  · Mapa de clusters      │
+                             │ mall_customers_segmented.csv │   │  · Clasificar cliente    │
+                             │ (lista para campañas)        │   └────────────┬─────────────┘
+                             └──────────────┬───────────────┘                │
+                                            └──────────────┬─────────────────┘
+                                                           ▼
+                                             Equipo de marketing (usuario final)
+```
+  * **Lo que existe hoy:** solo la base de datos de membresía, sin segmentación.
+  * **Lo que cambia:** se agregan el cuaderno de análisis, el modelo serializado, la lista segmentada y la aplicación de consulta.
+
+## Comunicación
+* **¿Cómo vamos a comunicarnos con las partes involucradas?**
+  * Reunión semanal de seguimiento (30 min) entre el equipo de minería de datos y el contacto principal de marketing.
+  * Reunión de validación de perfiles al terminar la Fase 5.
+  * Presentación final de resultados con demostración de la aplicación.
+  * Reporte mensual de seguimiento de campañas por segmento después de la entrega.
+  * Canal de chat o correo para dudas puntuales, y repositorio compartido con el cuaderno, la app y este documento.
+* **¿Qué personas van a ser los principales contactos de cada departamento?**
+  * Marketing: director(a) de marketing (contacto principal).
+  * CRM y fidelización: responsable de CRM (datos y uso de la lista segmentada).
+  * TI: administrador de sistemas (despliegue de la aplicación).
+  * Minería de datos: jefe de proyecto (punto único de contacto del equipo).
+
+## Preguntas del taller y respuestas
+
+Las respuestas resumen los resultados del cuaderno `proyecto_final_kmeans.ipynb`, donde están las tablas y gráficas que las respaldan. Todas las cifras salen del modelo final (K = 5, `random_state = 42`).
+
+### Parte 1 - Exploración de datos
+
+**1.1 ¿Qué variables son más adecuadas para segmentar clientes?**
+
+Las más adecuadas son el **ingreso anual** (`Annual Income`) y el **puntaje de gasto** (`Spending Score`):
+* **Son accionables para marketing.** Una mide la capacidad de compra y la otra el comportamiento de compra en el centro comercial.
+* **Aportan información independiente.** Su correlación es prácticamente nula (r ≈ 0.01).
+* **Forman grupos naturales.** En el diagrama de dispersión ingreso vs. gasto se ven cinco nubes de puntos, el escenario ideal para K-Means.
+
+Las demás variables tienen otro rol:
+* **Edad:** se usa para describir los segmentos, no para formarlos. Al agregarla, la silueta máxima baja de 0.555 a 0.428.
+* **Género:** es binaria, y la distancia euclidiana no es apropiada para variables categóricas. Además, las diferencias entre géneros son pequeñas.
+* **CustomerID:** es un identificador y se excluye.
+
+**1.2 ¿Se identifican valores atípicos?**
+
+* **Edad y puntaje de gasto:** no tienen valores atípicos ni con IQR ni con Z-score.
+* **Ingreso anual:** el criterio IQR marca 2 clientes con 137 k$, apenas por encima del límite superior de 132.75 k$. Su Z-score es 2.91, menor que 3, así que no son extremos con ese criterio.
+* **Decisión: se conservan.** Son ingresos plausibles, no errores de captura. Eliminarlos quitaría clientes de alto poder adquisitivo, que son relevantes para el negocio, y después de estandarizar su efecto sobre los centroides es mínimo.
+
+El dataset tampoco tiene nulos, duplicados ni valores imposibles, así que se conservan los 200 registros.
+
+**1.3 ¿Qué tipo de relaciones se observan entre las variables?**
+
+* **Ingreso vs. gasto:** no hay relación lineal (r ≈ 0.01), pero sí una estructura no lineal en grupos. Hay un bloque central de ingreso y gasto medios y cuatro grupos en las "esquinas" (ingreso alto o bajo combinado con gasto alto o bajo).
+* **Edad vs. gasto:** hay una relación negativa moderada (r ≈ −0.33). Ninguno de los 62 clientes con puntaje de gasto mayor a 60 supera los 40 años.
+* **Edad vs. ingreso:** no hay relación (r ≈ −0.01).
+* **Género:** las distribuciones son muy parecidas. Las mujeres son el 56 % de la muestra y tienen un gasto medio apenas mayor (51.5 vs. 48.5).
+
+### Parte 2 - Preprocesamiento
+
+**2.1 ¿Por qué es necesario escalar las variables en el algoritmo K-Means?**
+
+K-Means asigna cada cliente al centroide más cercano usando la distancia euclidiana, que suma las diferencias de todas las variables en sus unidades originales. Por eso:
+1. **La variable de mayor escala domina la distancia.** Si una se mide en millones y otra de 1 a 100, la segunda prácticamente desaparece del cálculo.
+2. **Las unidades son arbitrarias.** Pasar el ingreso de miles de dólares a dólares cambiaría por completo la segmentación sin que cambie nada del cliente.
+3. **Cada variable aporta lo mismo.** StandardScaler deja cada variable con media 0 y desviación 1, así el ingreso y el gasto pesan igual.
+4. **La inercia y la silueta se vuelven comparables**, porque se calculan en una misma escala.
+
+En el despliegue, el StandardScaler ajustado queda dentro del mismo Pipeline que el modelo, así que un cliente nuevo se escala exactamente igual que los datos de entrenamiento.
+
+### Parte 3 - Método del codo
+
+**3.1 ¿Por qué valores cercanos a cero indican mejor ajuste?**
+
+La inercia (WCSS) es la suma de las distancias al cuadrado de cada cliente a su centroide. Si es cercana a cero, cada cliente está muy cerca del "cliente típico" de su grupo, es decir, los clusters son compactos y homogéneos.
+
+**Advertencia:** la inercia siempre disminuye al aumentar K, y con K = n (un cluster por cliente) vale exactamente 0. Ese modelo no sirve, porque es equivalente al *overfitting*: memoriza clientes en lugar de encontrar patrones. Por eso "cerca de cero es mejor" solo vale al comparar modelos con el mismo K. Para elegir K hay que balancear compacidad y simplicidad, que es lo que hace el método del codo.
+
+**3.2 ¿Cómo se identifica el punto óptimo de K?**
+
+Es el "codo" de la curva: el K a partir del cual agregar un cluster más reduce poco la inercia. Hay tres evidencias de que el codo está en **K = 5**:
+* **Visualmente**, la curva cae con fuerza hasta K = 5 y después se aplana.
+* **Cuantitativamente**, de K = 4 a K = 5 la inercia baja un 39.8 % (de 108.9 a 65.6). De K = 5 a K = 6 solo baja un 16.0 %, y después las reducciones quedan entre 7 y 19 %.
+* **Heurística geométrica:** el punto más alejado de la recta que une K = 1 y K = 10 también es K = 5.
+
+### Parte 4 - Coeficiente de silueta
+
+**4.1 ¿Qué mide el coeficiente de silueta?**
+
+Mide qué tan bien asignado está cada cliente a su cluster. Para cada cliente: s(i) = (b(i) − a(i)) / max(a(i), b(i)), donde:
+* a(i) es la distancia promedio a los clientes de su propio cluster (**cohesión**).
+* b(i) es la distancia promedio a los clientes del cluster vecino más cercano (**separación**).
+
+El coeficiente global es el promedio de todos los clientes y va de −1 a 1. A diferencia de la inercia, no mejora automáticamente al aumentar K, por eso sirve para elegirlo.
+
+**4.2 ¿Qué significa un valor cercano a 1?**
+
+Que el cliente está muy cerca de los miembros de su cluster y muy lejos del cluster vecino, es decir, está claramente bien asignado. Si el promedio global es cercano a 1, los clusters son densos y bien separados. Como guía (Kaufman & Rousseeuw): más de 0.70 es una estructura fuerte, 0.51–0.70 razonable, 0.26–0.50 débil y menos de 0.25 sin estructura. Con K = 5 se obtiene **0.555**, una estructura razonable y el valor más alto de todos los K evaluados.
+
+**4.3 ¿Qué implica un valor cercano a 0 o negativo?**
+
+* **Cercano a 0:** el cliente está en la frontera entre dos clusters (a(i) ≈ b(i)), así que hay solapamiento entre grupos.
+* **Negativo:** el cliente está más cerca de otro cluster que del suyo. Probablemente está mal asignado. Si muchos clientes tienen silueta negativa, el K elegido no es adecuado.
+
+Con K = 5, solo 2 de los 200 clientes tienen silueta negativa, y apenas por debajo de cero (≈ −0.03 y ≈ −0.01). Otros 9 están por debajo de 0.25, todos en la frontera entre el grupo central y algún grupo vecino. El 94.5 % de los clientes tiene silueta ≥ 0.25, y todos los clusters tienen una silueta promedio entre 0.50 y 0.60.
+
+**4.4 ¿Coincide el valor óptimo de K con el método del codo? Justifique.**
+
+**Sí.** Los tres criterios señalan K = 5:
+
+| Criterio | K óptimo | Evidencia |
+|---|---|---|
+| Método del codo | 5 | La reducción de inercia cae de 39.8 % (4→5) a 16.0 % (5→6) |
+| Coeficiente de silueta | 5 | Máximo: 0.555 (K = 4: 0.494; K = 6: 0.540) |
+| Davies-Bouldin | 5 | Mínimo: 0.572 |
+
+Tiene sentido: en el diagrama ingreso vs. gasto se ven cinco grupos naturales. Con K = 4 se fusionarían dos grupos distintos, y con K = 6 se partiría un grupo que ya era homogéneo. Que métodos con lógicas diferentes lleguen al mismo K hace que la elección sea robusta.
+
+### Parte 5 - Modelo K-Means
+
+**5.1 ¿Qué representa cada cluster?**
+
+Cada cluster es un grupo de clientes con una combinación parecida de ingreso y gasto. Su centroide es el "cliente típico" del grupo:
+
+| Cluster | Centroide (ingreso / gasto) | Qué representa |
+|---|---|---|
+| C0 | ≈ 55 k$ / 50 pts | El cliente estándar: gasta en proporción a sus ingresos |
+| C1 | ≈ 87 k$ / 82 pts | Alto poder adquisitivo que efectivamente gasta en el centro comercial |
+| C2 | ≈ 26 k$ / 79 pts | Clientes jóvenes que gastan por encima de lo que su ingreso sugiere |
+| C3 | ≈ 88 k$ / 17 pts | Pueden gastar mucho, pero gastan poco aquí (probablemente compran en la competencia) |
+| C4 | ≈ 26 k$ / 21 pts | Baja capacidad y bajo gasto: compran lo necesario |
+
+**5.2 ¿Qué diferencias existen entre los grupos obtenidos?**
+
+* **Ingreso:** separa tres niveles bien definidos: bajo (≈ 26 k$), medio (≈ 55 k$) y alto (≈ 87 k$).
+* **Gasto:** dentro de los ingresos bajo y alto, los clientes se dividen en gastadores (≈ 80 pts) y ahorradores (≈ 17–21 pts).
+* **Edad** (aunque no se usó para entrenar): los grupos de gasto alto son los más jóvenes (≈ 25 y ≈ 33 años) y los de gasto bajo los mayores (≈ 41 y ≈ 45 años).
+* **Tamaño:** el grupo medio es el más grande (81 clientes, 40.5 %). Los demás tienen entre 22 y 39 clientes.
+* **Género:** predominan las mujeres (54–61 %), excepto en C3 (ingreso alto, gasto bajo), donde el 54 % son hombres.
+
+### Parte 6 - Interpretación de negocio
+
+**6.1 ¿Qué estrategias de marketing se podrían aplicar a cada grupo?**
+
+| Perfil | Clientes | Estrategia | Objetivo |
+|---|---|---|---|
+| Clientes de alto valor (C1) | 39 (19.5 %) | Programa VIP por niveles, acceso anticipado, eventos exclusivos, personal shopper, venta cruzada premium | Retener y aumentar el ticket |
+| Clientes promedio (C0) | 81 (40.5 %) | Puntos de fidelización, combos y temporadas, campañas en la app y por correo | Aumentar la frecuencia y llevar parte del grupo a alto valor |
+| Clientes con potencial (C3) | 35 (17.5 %) | Encuestas para entender barreras, ofertas personalizadas, experiencias premium, servicios de conveniencia, beneficio de bienvenida | Activar su gasto |
+| Compradores impulsivos (C2) | 22 (11 %) | Redes sociales e influenciadores, ventas relámpago, tendencias, descuentos para estudiantes, gamificación | Fidelizar con una oferta accesible y sostenible |
+| Clientes de bajo valor (C4) | 23 (11.5 %) | Comunicación masiva de bajo costo, descuentos en productos básicos, outlet | Mantener con mínima inversión |
+
+El enunciado propone cuatro perfiles de ejemplo. Se agregó un quinto, **compradores impulsivos** (ingreso bajo y gasto alto), porque su comportamiento no encaja en ninguno de los cuatro sin mezclar estrategias opuestas.
+
+**6.2 ¿Qué segmento representa mayor oportunidad de crecimiento?**
+
+Los **clientes con potencial** (C3: ingreso alto, gasto bajo):
+* **Tienen el mismo poder adquisitivo que los de alto valor** (≈ 88 k$ vs. ≈ 87 k$), pero su puntaje de gasto es 65 puntos menor (≈ 17 vs. ≈ 82). La brecha no es de capacidad sino de enganche con la oferta.
+* **Son un grupo grande** (35 clientes, 17.5 %).
+* **Cada cliente que se active es el mayor incremento posible por cliente.**
+
+La oportunidad secundaria son los **clientes promedio**, por volumen (40.5 % de la base). Los de alto valor no son una oportunidad de crecimiento sino de retención.
+
+### Parte 7 - Despliegue con Streamlit
+
+La aplicación `app.py` cumple los cuatro requisitos del taller:
+1. **Visualiza el método del codo**, junto con la silueta y la tabla de métricas por K.
+2. **Muestra los clusters generados** en un mapa interactivo con centroides, resumen por perfil y estrategias.
+3. **Permite ingresar un nuevo cliente** (ingreso anual y puntaje de gasto).
+4. **Clasifica automáticamente al cliente** en un cluster y muestra su perfil y la estrategia recomendada. Si el ingreso está fuera del rango de entrenamiento (15–137 k$), muestra una advertencia.
+
+Se ejecuta con: `streamlit run app.py`
