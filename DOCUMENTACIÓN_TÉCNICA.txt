@@ -2,7 +2,7 @@
 
 * **Proyecto:** Taller final de Minería de datos. Segmentación de clientes con K-Means (dataset *Mall Customers*).
 * **Docente:** PhD Cristian Camilo Ordoñez Quintero
-* **Integrante:** Sara María Ojeda López
+* **Integrantes:** Sara María Ojeda López y Saray Noguera
 * **Archivos relacionados:** `proyecto_final_kmeans.ipynb` (análisis completo), `app.py` (aplicación Streamlit), `models/kmeans_segmentation.joblib` (modelo) y `outputs/mall_customers_segmented.csv` (clientes segmentados).
 
 **Contenido**
@@ -37,8 +37,8 @@
 ## Personas involucradas
 * Personas involucradas en el proyecto:
 	* Equipo de Minería de datos:
-		* Jefe de proyecto: Sara María Ojeda López - planeación, seguimiento y comunicación con el cliente.
-		* Minero de datos: Sara María Ojeda López - exploración, modelado, evaluación y despliegue.
+		* Jefe de proyecto: Sara María Ojeda López y Saray Noguera - planeación, seguimiento y comunicación con el cliente.
+		* Minero de datos: Sara María Ojeda López y Saray Noguera - exploración, modelado, evaluación y despliegue.
 
 	* Cliente:
 		* Contacto principal: director(a) de marketing del centro comercial - valida los perfiles y las estrategias.
