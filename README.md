@@ -3,6 +3,8 @@
 
 Modelo de segmentación de clientes con K-Means, evaluado con el método del codo, el coeficiente de silueta y el índice de Davies-Bouldin, con interpretación de negocio y despliegue en Streamlit.
 
+**App en línea:** https://mineria-segmentacion-clientes.streamlit.app
+
 ## Resultados principales
 
 | Métrica | Valor |
@@ -72,6 +74,6 @@ Modelo de segmentación de clientes con K-Means, evaluado con el método del cod
    - **Main file path:** `app.py`
    - **App URL:** un subdominio libre, por ejemplo `segmentacion-clientes-kmeans`
 3. En **Advanced settings**, elegir **Python 3.12**. Las versiones fijadas en `requirements.txt` no existen para Python 3.11.
-4. Presionar **Deploy**. Streamlit instala `requirements.txt`, aplica el tema de `.streamlit/config.toml` y publica la app en `https://<subdominio>.streamlit.app`.
+4. Presionar **Deploy**. Streamlit instala `requirements.txt`, aplica el tema de `.streamlit/config.toml` y publica la app en `https://<subdominio>.streamlit.app`. Este proyecto está publicado en https://mineria-segmentacion-clientes.streamlit.app.
 
 Cada `git push` a `main` actualiza la app desplegada automáticamente.

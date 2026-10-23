@@ -66,6 +66,7 @@ PAGE_CSS = """
   font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05; font-weight: 750; letter-spacing: -0.025em;
   margin: 0 0 var(--space-sm) 0; max-width: 16ch;
 }
+.nowrap { white-space: nowrap; }
 .hero-lead { font-size: 1.1rem; line-height: 1.55; opacity: 0.75; max-width: 64ch; margin-bottom: var(--space-md); }
 .kpi { border-top: 1px solid var(--hairline); padding-top: var(--space-sm); }
 .kpi-label { font-size: 13px; opacity: 0.65; }
@@ -517,7 +518,7 @@ def main():
         """
 <header>
   <div class="eyebrow">Minería de datos · Proyecto final</div>
-  <h1 class="hero-title">Segmentación de clientes con K-Means</h1>
+  <h1 class="hero-title">Segmentación de clientes con <span class="nowrap">K-Means</span></h1>
   <p class="hero-lead">Agrupa a los clientes del centro comercial según su ingreso anual y su puntaje de gasto
   para diseñar estrategias de marketing por segmento y clasificar automáticamente a los clientes nuevos.</p>
 </header>
