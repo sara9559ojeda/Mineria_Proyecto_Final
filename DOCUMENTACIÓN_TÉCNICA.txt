@@ -37,8 +37,8 @@
 ## Personas involucradas
 * Personas involucradas en el proyecto:
 	* Equipo de Minería de datos:
-		* Jefe de proyecto: Sara María Ojeda López y Saray Noguera - planeación, seguimiento y comunicación con el cliente.
-		* Minero de datos: Sara María Ojeda López y Saray Noguera - exploración, modelado, evaluación y despliegue.
+		* Jefe de proyecto: planeación, seguimiento y comunicación con el cliente.
+		* Minero de datos: exploración, modelado, evaluación y despliegue.
 
 	* Cliente:
 		* Contacto principal: director(a) de marketing del centro comercial - valida los perfiles y las estrategias.
