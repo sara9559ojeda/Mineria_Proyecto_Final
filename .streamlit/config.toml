@@ -1,9 +1,21 @@
 [theme]
 base = "light"
 primaryColor = "#2a78d6"
-backgroundColor = "#f9f9f7"
-secondaryBackgroundColor = "#f0efec"
-textColor = "#0b0b0b"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f2f1ed"
+textColor = "#141413"
+linkColor = "#1c5cab"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+baseRadius = "0.5rem"
+borderColor = "#e3e2dc"
+showWidgetBorder = true
+dataframeBorderColor = "#e3e2dc"
+dataframeHeaderBackgroundColor = "#f2f1ed"
+headingFontWeights = 650
+
+[client]
+toolbarMode = "minimal"
 
 [server]
 headless = true

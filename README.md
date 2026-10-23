@@ -58,10 +58,10 @@ Modelo de segmentación de clientes con K-Means, evaluado con el método del cod
    streamlit run app.py
    ```
 
-   La aplicación abre en `http://localhost:8501` y tiene tres secciones:
-   - **Método del codo:** inercia y silueta por K, con el K elegido marcado.
-   - **Clusters:** mapa interactivo de los segmentos con sus centroides, resumen por perfil y estrategias de marketing.
-   - **Clasificar cliente:** se ingresan el ingreso anual y el puntaje de gasto, y el modelo asigna automáticamente el cluster, el perfil y la estrategia recomendada.
+   La aplicación abre en `http://localhost:8501` y tiene tres pestañas:
+   - **Segmentos:** mapa interactivo de los clientes con sus centroides, tamaño de cada segmento, perfiles con su estrategia de marketing, tabla comparativa y descarga del CSV segmentado.
+   - **Clasificar cliente:** se ingresan el ingreso anual y el puntaje de gasto, y el modelo asigna automáticamente el cluster, el perfil y la estrategia, muestra la distancia a cada centroide y advierte si el ingreso está fuera del rango de entrenamiento.
+   - **Selección de K:** los tres criterios (codo, silueta y Davies-Bouldin), las gráficas de inercia y silueta por K y la tabla de métricas.
 
 > El modelo se guardó con scikit-learn 1.9.1. Si se usa otra versión, conviene volver a ejecutar el cuaderno (paso 2) antes de abrir la app.
 
